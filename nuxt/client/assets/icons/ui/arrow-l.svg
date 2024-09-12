@@ -1,0 +1,16 @@
+<svg
+	width="4"
+	height="8"
+	viewBox="0 0 6 8"
+	fill="none"
+	xmlns="http://www.w3.org/2000/svg"
+>
+	<path
+		d="
+		M 5 0
+		L 1 4
+		L 5 8"
+		stroke="white"
+		stroke-width="1"
+	/>
+</svg>

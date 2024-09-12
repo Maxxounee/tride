@@ -1,0 +1,14 @@
+{
+  "path": "../../",
+  "js": [],
+  "babel": [],
+  "css": [
+    {
+      "src": "wolf/admin/css/src",
+      "result": "wolf/admin/css",
+      "min": true
+    }
+  ],
+  "sprite": [],
+  "font": []
+}

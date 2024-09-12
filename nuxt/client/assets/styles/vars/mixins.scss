@@ -1,0 +1,75 @@
+@mixin fontItalic($size: 1.8rem, $weight: 300, $height: 1.2em, $space: null) {
+	font-size: $size;
+
+	@if $weight {
+		font-weight: $weight;
+	}
+
+	@if $height {
+		line-height: $height;
+	}
+
+	@if $space {
+		letter-spacing: $space;
+	}
+
+	font-family: NotoSerifDisplay, "NotoSerifDisplay Fallback: Times New Roman", "NotoSerifDisplay Fallback: Times New Roman", serif;
+	font-style: italic;
+}
+
+@mixin text-crop($line-height: 1, $top-adjustment: 0px, $bottom-adjustment: 0px) {
+	// Configured in Step 1
+	$top-crop: 10;
+	$bottom-crop: 5;
+	$crop-font-size: 36;
+	$crop-line-height: 1;
+
+	// Apply values to calculate em-based margins that work with any font size
+	$dynamic-top-crop: calc(max(($top-crop + ($line-height - $crop-line-height) * ($crop-font-size / 2)), 0) / $crop-font-size);
+	$dynamic-bottom-crop: calc(max(($bottom-crop + ($line-height - $crop-line-height) * ($crop-font-size / 2)), 0) / $crop-font-size);
+
+	// Mixin output
+	line-height: $line-height;
+
+	&::before,
+	&::after {
+		content: '';
+		display: block;
+		height: 0;
+		width: 0;
+	}
+
+	&::before {
+		margin-bottom: calc(-#{$dynamic-top-crop}em + #{$top-adjustment});
+	}
+
+	&::after {
+		margin-top: calc(-#{$dynamic-bottom-crop}em + #{$bottom-adjustment});
+	}
+}
+
+@mixin div100($position: absolute) {
+	position: $position;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	height: 100dvh;
+}
+
+@mixin center($type: all) {
+	position: absolute;
+	@if ($type == x) {
+		left: 50%;
+		transform: translateX(-50%);
+	}
+	@if ($type == y) {
+		transform: translateY(-50%);
+		top: 50%;
+	}
+	@if ($type == all) {
+		transform: translate(-50%, -50%);
+		top: 50%;
+		left: 50%;
+	}
+}

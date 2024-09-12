@@ -1,0 +1,23 @@
+:root {
+	--font-size: calc(((100vw / 375) + (100vh / 812)) * 5);
+}
+
+.txt {
+	&_color {
+		&-sun {
+			color: var(--color-sun);
+		}
+
+		&-sea {
+			color: var(--color-sea);
+		}
+
+		&-text {
+			color: var(--color-text);
+		}
+	}
+
+	&_up {
+		text-transform: uppercase;
+	}
+}

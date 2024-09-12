@@ -1,0 +1,146 @@
+.default {
+	$t: 0.6s;
+
+	&-enter {
+		opacity: 0;
+	}
+
+	&-enter-active {
+		transition: opacity $t ease;
+	}
+
+	&-leave-active {
+		z-index: 0;
+		transition: opacity 0s ease $t;
+	}
+}
+
+.opacity200 {
+	&-enter-active,
+	&-leave-active {
+		opacity: 0;
+		transition: opacity 0.2s;
+	}
+
+	&-enter-from,
+	&-leave-to {
+		opacity: 0;
+	}
+
+	&-enter-to,
+	&-leave-from {
+		opacity: 1;
+	}
+}
+
+.opacity300 {
+	&-enter-active,
+	&-leave-active {
+		opacity: 0;
+		transition: opacity 0.3s;
+	}
+
+	&-enter-from,
+	&-leave-to {
+		opacity: 0;
+	}
+
+	&-enter-to,
+	&-leave-from {
+		opacity: 1;
+	}
+}
+
+.opacity400 {
+	&-enter-active,
+	&-leave-active {
+		opacity: 0;
+		transition: opacity 0.4s;
+	}
+
+	&-enter-from,
+	&-leave-to {
+		opacity: 0;
+	}
+
+	&-enter-to,
+	&-leave-from {
+		opacity: 1;
+	}
+}
+
+.clip-ver {
+	&-enter-active,
+	&-leave-active {
+		transition: clip-path 1s !important;
+	}
+
+	&-enter-from {
+		clip-path: inset(100% 0 0 0);
+	}
+
+	&-enter-to,
+	&-leave-from {
+		clip-path: inset(0 0 0 0);
+	}
+
+	&-leave-to {
+		clip-path: inset(0 0 100% 0);
+	}
+}
+
+.clip-ver-reverse {
+	&-enter-active,
+	&-leave-active {
+		transition: clip-path 1s !important;
+	}
+
+	&-enter-from {
+		clip-path: inset(0 0 100% 0);
+	}
+
+	&-enter-to,
+	&-leave-from {
+		clip-path: inset(0 0 0 0);
+	}
+
+	&-leave-to {
+		clip-path: inset(100% 0 0 0);
+	}
+}
+
+
+.slideLeft {
+	&-enter-active,
+	&-leave-active {
+		transition: translate 1s !important;
+	}
+
+	&-enter-to,
+	&-leave-from {
+		translate: 0%;
+	}
+
+	&-enter-from,
+	&-leave-to {
+		translate: -100%;
+	}
+}
+
+.moveUp {
+	&-enter-active,
+	&-leave-active {
+		translate: 0 100%;
+		transition: translate 0.6s var(--easeInOutQuart);
+	}
+
+	&-enter-from,
+	&-leave-to {
+		translate: 0 100%;
+	}
+
+	&-enter-to,
+	&-leave-from {
+		translate: 0;
+	}
+}

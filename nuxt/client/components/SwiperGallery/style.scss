@@ -1,0 +1,276 @@
+/**
+ * Swiper 11.1.4
+ * Most modern mobile touch slider and framework with hardware accelerated transitions
+ * https://swiperjs.com
+ *
+ * Copyright 2014-2024 Vladimir Kharlampidi
+ *
+ * Released under the MIT License
+ *
+ * Released on: May 30, 2024
+ */
+
+
+:host {
+	position: relative;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	z-index: 1;
+}
+
+.SwiperGallery {
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+	overflow: hidden;
+	list-style: none;
+	padding: 0;
+	/* Fix of Webkit flickering */
+	z-index: 1;
+	display: block;
+}
+
+.swiper-vertical > .SwiperGallery__wrapper {
+	flex-direction: column;
+}
+
+.swiper-fade .SwiperGallery__slide {
+	pointer-events: none;
+	transition-property: opacity;
+}
+
+.SwiperGallery__wrapper {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	display: flex;
+	transition-property: transform;
+	transition-timing-function: var(--SwiperGallery__wrapper-transition-timing-function, initial);
+	box-sizing: content-box;
+}
+
+.swiper-android .SwiperGallery__slide,
+.swiper-ios .SwiperGallery__slide,
+.SwiperGallery__wrapper {
+	transform: translate3d(0px, 0, 0);
+}
+
+.swiper-horizontal {
+	touch-action: pan-y;
+}
+
+.swiper-vertical {
+	touch-action: pan-x;
+}
+
+.SwiperGallery__slide {
+	flex-shrink: 0;
+	width: 100%;
+	height: 100%;
+	position: relative;
+	transition-property: transform, opacity;
+	display: block;
+}
+
+.SwiperGallery__slide-invisible-blank {
+	visibility: hidden;
+}
+
+/* Auto Height */
+.swiper-autoheight,
+.swiper-autoheight .SwiperGallery__slide {
+	height: auto;
+}
+
+.swiper-autoheight .SwiperGallery__wrapper {
+	align-items: flex-start;
+	transition-property: transform, height;
+}
+
+.swiper-backface-hidden .SwiperGallery__slide {
+	transform: translateZ(0);
+	backface-visibility: hidden;
+}
+
+/* 3D Effects */
+.swiper-3d.swiper-css-mode .SwiperGallery__wrapper {
+	perspective: 1200px;
+}
+
+.swiper-3d .SwiperGallery__wrapper {
+	transform-style: preserve-3d;
+}
+
+.swiper-3d {
+	perspective: 1200px;
+
+	.SwiperGallery__slide,
+	.swiper-cube-shadow {
+		transform-style: preserve-3d;
+	}
+}
+
+/* CSS Mode */
+.swiper-css-mode {
+	> .SwiperGallery__wrapper {
+		overflow: auto;
+		scrollbar-width: none; /* For Firefox */
+		-ms-overflow-style: none; /* For Internet Explorer and Edge */
+		&::-webkit-scrollbar {
+			display: none;
+		}
+	}
+
+	> .SwiperGallery__wrapper > .SwiperGallery__slide {
+		scroll-snap-align: start start;
+	}
+
+	&.swiper-horizontal {
+		> .SwiperGallery__wrapper {
+			scroll-snap-type: x mandatory;
+		}
+	}
+
+	&.swiper-vertical {
+		> .SwiperGallery__wrapper {
+			scroll-snap-type: y mandatory;
+		}
+	}
+
+	&.swiper-free-mode {
+		> .SwiperGallery__wrapper {
+			scroll-snap-type: none;
+		}
+
+		> .SwiperGallery__wrapper > .SwiperGallery__slide {
+			scroll-snap-align: none;
+		}
+	}
+
+	&.swiper-centered {
+		> .SwiperGallery__wrapper::before {
+			content: '';
+			flex-shrink: 0;
+			order: 9999;
+		}
+
+		> .SwiperGallery__wrapper > .SwiperGallery__slide {
+			scroll-snap-align: center center;
+			scroll-snap-stop: always;
+		}
+	}
+
+	&.swiper-centered.swiper-horizontal {
+		> .SwiperGallery__wrapper > .SwiperGallery__slide:first-child {
+			margin-inline-start: var(--swiper-centered-offset-before);
+		}
+
+		> .SwiperGallery__wrapper::before {
+			height: 100%;
+			min-height: 1px;
+			width: var(--swiper-centered-offset-after);
+		}
+	}
+
+	&.swiper-centered.swiper-vertical {
+		> .SwiperGallery__wrapper > .SwiperGallery__slide:first-child {
+			margin-block-start: var(--swiper-centered-offset-before);
+		}
+
+		> .SwiperGallery__wrapper::before {
+			width: 100%;
+			min-width: 1px;
+			height: var(--swiper-centered-offset-after);
+		}
+	}
+}
+
+/* Slide styles start */
+/* 3D Shadows */
+.swiper-3d {
+	.SwiperGallery__slide-shadow,
+	.SwiperGallery__slide-shadow-left,
+	.SwiperGallery__slide-shadow-right,
+	.SwiperGallery__slide-shadow-top,
+	.SwiperGallery__slide-shadow-bottom,
+	.SwiperGallery__slide-shadow,
+	.SwiperGallery__slide-shadow-left,
+	.SwiperGallery__slide-shadow-right,
+	.SwiperGallery__slide-shadow-top,
+	.SwiperGallery__slide-shadow-bottom {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
+		z-index: 10;
+	}
+
+	.SwiperGallery__slide-shadow {
+		background: rgba(0, 0, 0, 0.15);
+	}
+
+	.SwiperGallery__slide-shadow-left {
+		background-image: linear-gradient(to left, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+	}
+
+	.SwiperGallery__slide-shadow-right {
+		background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+	}
+
+	.SwiperGallery__slide-shadow-top {
+		background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+	}
+
+	.SwiperGallery__slide-shadow-bottom {
+		background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+	}
+}
+
+.swiper-lazy-preloader {
+	width: 42px;
+	height: 42px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -21px;
+	margin-top: -21px;
+	z-index: 10;
+	transform-origin: 50%;
+	box-sizing: border-box;
+	border: 4px solid var(--swiper-preloader-color, var(--swiper-theme-color));
+	border-radius: 50%;
+	border-top-color: transparent;
+}
+
+.swiper:not(.swiper-watch-progress),
+.swiper-watch-progress .SwiperGallery__slide-visible {
+	.swiper-lazy-preloader {
+		animation: swiper-preloader-spin 1s infinite linear;
+	}
+}
+
+.swiper-lazy-preloader-white {
+	--swiper-preloader-color: #fff;
+}
+
+.swiper-lazy-preloader-black {
+	--swiper-preloader-color: #000;
+}
+
+@keyframes swiper-preloader-spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+/* Slide styles end */
+
+
+

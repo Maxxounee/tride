@@ -1,0 +1,138 @@
+##
+variables:
+  GIT_STRATEGY: none
+  TARGET_DIR: /var/www
+  STAGE_SITE_NAME: alean.art3d.dev
+  PROD_SITE_NAME: aleanmontvert.ru
+  MDB_NAME: aleanmontvert
+  DB_DIR: /home/gitlab-runner/db
+
+stages:
+  - stage
+  - prod
+  - maint
+
+include:
+  - project: 'devops/ci-templates'
+    ref: main
+    file:
+      - 'nuxt3/.before_script_prepare_deployment.yml'
+      - 'nuxt3/.before_script_clean_repo.yml'
+      - 'nuxt3/.normal_script_stage_clone_repo.yml'
+      - 'nuxt3/.normal_script_stage_pull_tags.yml'
+      - 'nuxt3/.normal_script_push_loc_db_to_loc_repo.yml' 
+      - 'nuxt3/.normal_script_pull_loc_repo_to_prod_db.yml'    
+      - 'nuxt3/.normal_script_push_prod_db_to_prod_repo.yml' 
+      - 'nuxt3/.normal_script_pull_prod_repo_to_loc_db.yml'     
+      - 'nuxt3/.normal_script_prod_clone_repo.yml'
+      - 'nuxt3/.normal_script_prod_pull_main.yml' 
+      - 'nuxt3/.after_script_fix_permissions.yml'
+
+# ------ STAGE ------- #
+
+1. manual admin clone repo to demo-art3d-dev:
+  extends:
+    - .before_script_clean_repo
+    - .normal_script_stage_clone_repo
+    #- .after_script_fix_permissions
+  stage: stage
+  when: manual
+  tags:
+    - stage
+  variables:
+    SITE_NAME: $STAGE_SITE_NAME
+  only:
+    - main
+
+2. auto pull stage tags to demo-art3d-dev:
+  extends:
+    #- .before_script_prepare_deployment
+    - .normal_script_stage_pull_tags
+    #- .after_script_fix_permissions
+  stage: stage
+  when: always
+  tags:
+    - stage
+  variables:
+    SITE_NAME: $STAGE_SITE_NAME
+  only:
+    - /^stage-/
+
+# ------ PRODUCTION ------- #
+
+1. manual admin clone repo to production:
+  extends:
+    - .before_script_clean_repo
+    - .normal_script_prod_clone_repo
+    #- .after_script_fix_permissions
+  stage: prod
+  when: manual
+  tags:
+    - prod
+  variables:
+    SITE_NAME: $PROD_SITE_NAME
+  only:
+    - main
+
+2. auto pull main to production:
+  extends:
+    - .before_script_prepare_deployment
+    - .normal_script_prod_pull_main
+    - .after_script_fix_permissions
+  stage: prod
+  when: always
+  tags:
+    - prod
+  variables:
+    SITE_NAME: $PROD_SITE_NAME
+  only:
+    - main
+
+# ------ MAINT ------- #
+# loc db to prod db 
+# loc db ---> push ---> loc repo ---> pull ---> prod db
+
+1. api push loc db to loc repo:
+  extends:
+    - .normal_script_push_loc_db_to_loc_repo
+  stage: maint
+  when: always
+  tags:
+    - loc
+  only:
+    - /^loc-db-to-prod-/
+
+2. api pull loc repo to prod db:
+  extends:
+    - .normal_script_pull_loc_repo_to_prod_db
+  stage: maint
+  when: always
+  #needs: ["1. api push loc db to loc repo"]
+  tags:
+    - prod
+  only:
+    - /^loc-db-to-prod-/
+
+# prod db to loc db 
+# prod db ---> push ---> prod repo ---> pull ---> loc db
+
+3. api push prod db to prod repo:
+  extends:
+    - .normal_script_push_prod_db_to_prod_repo
+  stage: maint
+  when: always
+  tags:
+    - prod
+  only:
+    - /^prod-db-to-loc-/
+
+4. api pull prod repo to loc db:
+  extends:
+    - .normal_script_pull_prod_repo_to_loc_db
+  stage: maint
+  when: always
+  #needs: ["3. api push prod db to prod repo"]
+  tags:
+    - loc
+  only:
+    - /^prod-db-to-loc-/
