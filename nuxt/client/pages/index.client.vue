@@ -9,6 +9,7 @@
 		<div v-if="loaded" class="canvas">
 			<ClientOnly>
 				<TresCanvas v-bind="gl">
+					<OrbitControls />
 					<TresPerspectiveCamera
 						:position="[2, 2, 10]"
 						:look-at="[0, 2, 0]"
@@ -19,7 +20,7 @@
 					<TresDirectionalLight
 						color="#F78B3D"
 						:position="[3, 3, 3]"
-						:intensity="1"
+						:intensity="2"
 					/>
 					<TresAmbientLight :intensity="2" />
 				</TresCanvas>
@@ -52,7 +53,7 @@ const gl = {
 	toneMapping: NoToneMapping,
 	windowSize: true,
 	style: {
-		pointerEvents: 'none',
+		// pointerEvents: 'none',
 	},
 };
 const loaded = ref(false);
@@ -61,8 +62,8 @@ const scrollValue = ref(0);
 let scene;
 onMounted(async() => {
 	const { scene: house } = await useLoader(GLTFLoader, '/models/house.gltf');
-	loaded.value = true;
 	scene = house;
+	loaded.value = true;
 });
 
 function scrollHandler({ animatedScroll, dimensions }) {

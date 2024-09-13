@@ -1,5 +1,3 @@
-import {templateCompilerOptions} from '@tresjs/core'
-
 export default defineNuxtConfig({
 	devtools: {enabled: false},
 	app: {
@@ -115,7 +113,6 @@ export default defineNuxtConfig({
 
 	vue: {
 		compilerOptions: {
-			...templateCompilerOptions,
 			isCustomElement: (tag: string): boolean => tag.includes('-'),
 		},
 	},
