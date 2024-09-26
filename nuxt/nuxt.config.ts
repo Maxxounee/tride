@@ -73,7 +73,6 @@ export default defineNuxtConfig({
 		composables: true,
 		extraPlugins: {
 			scrollTrigger: true,
-			flip: true,
 		},
 	},
 

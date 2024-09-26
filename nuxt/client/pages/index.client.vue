@@ -10,19 +10,16 @@
 			<ClientOnly>
 				<TresCanvas v-bind="gl">
 					<OrbitControls />
-					<TresPerspectiveCamera
-						:position="[2, 2, 10]"
-						:look-at="[0, 2, 0]"
-					/>
+					<!--<TresPerspectiveCamera />-->
 					<Suspense>
 						<primitive ref="primitive" :object="scene" />
 					</Suspense>
+					<TresAmbientLight />
 					<TresDirectionalLight
 						color="#F78B3D"
 						:position="[3, 3, 3]"
 						:intensity="2"
 					/>
-					<TresAmbientLight :intensity="2" />
 				</TresCanvas>
 			</ClientOnly>
 		</div>
@@ -42,6 +39,8 @@
 
 <script setup>
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { BasicShadowMap, SRGBColorSpace, NoToneMapping } from 'three';
 // import { TresCanvas } from '@tresjs/core';
 const gl = {
@@ -60,10 +59,33 @@ const loaded = ref(false);
 const primitive = ref();
 const scrollValue = ref(0);
 let scene;
-onMounted(async() => {
-	const { scene: house } = await useLoader(GLTFLoader, '/models/house.gltf');
-	scene = house;
+
+async function loadGltfModel() {
+	const value = await useLoader(GLTFLoader, '/models/house_web.gltf');
+	scene = value.scene;
+	console.log('value', value);
+
 	loaded.value = true;
+}
+
+async function loadFbxModel() {
+	const value = await useLoader(FBXLoader, '/models/house_web.fbx');
+	scene = value;
+
+	loaded.value = true;
+}
+
+async function loadObjModel() {
+	const value = await useLoader(OBJLoader, '/models/house_web.obj');
+	console.log('value', value);
+	scene = value;
+	loaded.value = true;
+}
+
+onMounted(async() => {
+	// loadObjModel();
+	// loadFbxModel();
+	loadGltfModel();
 });
 
 function scrollHandler({ animatedScroll, dimensions }) {
@@ -72,6 +94,7 @@ function scrollHandler({ animatedScroll, dimensions }) {
 	primitive.value.rotation.y = scrollValue.value;
 	primitive.value.position.z = scrollValue.value * 5;
 	primitive.value.position.y = scrollValue.value * 3;
+	primitive.value.scale.y = scrollValue.value * 2;
 }
 
 </script>
