@@ -1,8 +1,19 @@
-# savings
+<template>
+	<Suspense>
+		<ClientOnly>
 
-ЧАстицы двигаются рядом с кривой, но дрыгаются
+			<TresCanvas class="particles-2" v-bind="gl">
+				<TdParticles />
+				<OrbitControls />
+				<!--<Precipitation />-->
+				<TresPerspectiveCamera :position="[0, 0, 10]" />
+				<TresDirectionalLight :position="[1, 1, 1]" />
+			</TresCanvas>
+		</ClientOnly>
+	</Suspense>
+</template>
 
-```js
+<script setup>
 
 import { CatmullRomCurve3, Vector3 } from 'three';
 
@@ -10,6 +21,7 @@ const particleSystem = shallowRef(null);
 const particleCount = 1000;
 const positions = new Float32Array(particleCount * 3);
 const scaleArray = new Float32Array(particleCount);
+
 const curve = new CatmullRomCurve3([
 	new Vector3(-10, 0, 0),
 	new Vector3(-5, 5, 0),
@@ -50,7 +62,7 @@ onMounted(()=>{
 				const currentPosition = new Vector3(
 					positions[i * 3],
 					positions[i * 3 + 1],
-					positions[i * 3 + 2]
+					positions[i * 3 + 2],
 				);
 
 				// Вычисляем вектор притяжения
@@ -71,7 +83,7 @@ onMounted(()=>{
 						const otherPosition = new Vector3(
 							positions[j * 3],
 							positions[j * 3 + 1],
-							positions[j * 3 + 2]
+							positions[j * 3 + 2],
 						);
 						const distance = currentPosition.distanceTo(otherPosition);
 						if (distance > 0 && distance < 0.5) {
@@ -83,7 +95,7 @@ onMounted(()=>{
 
 				if (t >= 0.99) {
 					// Если достигла, перемещаем её в начало кривой
-					console.log('ift')
+					console.log('ift');
 					const startPoint = curve.getPoint(0);
 					currentPosition.set(startPoint.x, startPoint.y, startPoint.z);
 				} else {
@@ -124,6 +136,40 @@ onMounted(()=>{
 	animate();
 
 	// console.log('useTresContext()', useTresContext())
-})
+});
 
-```
+</script>
+
+<style lang="scss">
+.particles-2 {
+	@include div100;
+
+	.canvas {
+		@include div100;
+
+		pointer-events: none;
+	}
+
+	.block {
+		height: 100vh;
+	}
+
+	.title {
+		@include center(x);
+
+		bottom: 10rem;
+		translate: calc(100% + 50vw);
+
+		font-size: 20rem;
+
+		transition-timing-function: var(--easeInOutQuart);
+		transition-duration: 0.69s;
+		transition-property: translate;
+
+		&.active {
+			translate: none;
+		}
+	}
+
+}
+</style>

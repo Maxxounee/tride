@@ -125,6 +125,6 @@ export default defineNuxtConfig({
 	experimental: {
 		typedPages: true,
 	},
-
+	components: true,
 	telemetry: false,
 });

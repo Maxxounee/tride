@@ -4,7 +4,6 @@
 			<NuxtPage />
 		</NuxtLayout>
 
-		<UtilsRulers />
 	</div>
 </template>
 
