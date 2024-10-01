@@ -8,7 +8,7 @@ import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 
 const imageWidth = 1000;
 const imageHeight = 1000;
-const squareSize = 80; // Размер каждого квадрата
+const squareSize = 140; // Размер каждого квадрата
 const numSquaresX = imageWidth / squareSize;
 const numSquaresY = imageHeight / squareSize;
 
@@ -55,13 +55,16 @@ onMounted(() => {
 	for (let i = 0; i < numSquaresX; i++) {
 		for (let j = 0; j < numSquaresY; j++) {
 			const geometry = new THREE.BufferGeometry();
+
 			const positions = new Float32Array([
 				-squareSize / 2, -squareSize / 2, 0,
 				squareSize / 2, -squareSize / 2, 0,
 				squareSize / 2, squareSize / 2, 0,
 				-squareSize / 2, squareSize / 2, 0,
 			]);
+
 			const indices = new Uint16Array([0, 1, 2, 0, 2, 3]);
+
 			const uvs = new Float32Array([
 				i / numSquaresX, j / numSquaresY,
 				(i + 1) / numSquaresX, j / numSquaresY,
@@ -83,34 +86,6 @@ onMounted(() => {
 		}
 	}
 
-	// const centerX = imageWidth / 2;
-	// const centerY = imageHeight / 2;
-	// const edgeThreshold = 0.3; // Порог для определения краев
-	//
-	// squares.value.forEach((square, index) => {
-	// 	const x = (index % numSquaresX) * squareSize + squareSize / 2;
-	// 	const y = Math.floor(index / numSquaresX) * squareSize + squareSize / 2;
-	//
-	// 	const distanceToEdgeX = Math.min(x, imageWidth - x);
-	// 	const distanceToEdgeY = Math.min(y, imageHeight - y);
-	//
-	// 	const isNearEdge = distanceToEdgeX / (imageWidth / 2) < edgeThreshold || distanceToEdgeY / (imageHeight / 2) < edgeThreshold;
-	//
-	// 	if (isNearEdge) {
-	// 		const distanceToCenter = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
-	// 		const maxDistance = Math.sqrt(centerX ** 2 + centerY ** 2);
-	//
-	// 		const edgeFactor = 1 - Math.min(distanceToEdgeX, distanceToEdgeY) / (imageWidth / 2); // Фактор края
-	// 		const centerFactor = distanceToCenter / maxDistance; // Фактор центра
-	//
-	// 		const opacityProbability = edgeFactor * (1 - centerFactor); // Вероятность прозрачности
-	// 		const randomOpacity = Math.random() < opacityProbability ? Math.random() : 1; // Случайная прозрачность с учетом вероятности
-	//
-	// 		square.material.opacity = randomOpacity;
-	// 	} else {
-	// 		square.material.opacity = 1; // Абсолютно непрозрачный
-	// 	}
-	// });
 
 	const masks = [
 		{x: 0.1, y: 0.2, radius: 0.3},
