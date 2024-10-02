@@ -57,12 +57,20 @@ export default class Squares {
 		for (let i = 0; i < this.hCount; i++) {
 			for (let j = 0; j < this.vCount; j++) {
 				const geometry = new THREE.BufferGeometry();
+				const geometry2 = new THREE.BufferGeometry();
 
 				const positions = new Float32Array([
 					-this.hSquare / 2, -this.vSquare / 2, 0,
 					this.hSquare / 2, -this.vSquare / 2, 0,
 					this.hSquare / 2, this.vSquare / 2, 0,
 					-this.hSquare / 2, this.vSquare / 2, 0,
+				]);
+
+				const positions2 = new Float32Array([
+					-this.hSquare / 2, -this.vSquare / 2, 1,
+					this.hSquare / 2, -this.vSquare / 2, 1,
+					this.hSquare / 2, this.vSquare / 2, 1,
+					-this.hSquare / 2, this.vSquare / 2, 1,
 				]);
 
 				const indices = new Uint16Array([
@@ -81,17 +89,35 @@ export default class Squares {
 				geometry.setIndex(new THREE.BufferAttribute(indices, 1));
 				geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
 
+				geometry2.setAttribute('position', new THREE.BufferAttribute(positions2, 3));
+				geometry2.setIndex(new THREE.BufferAttribute(indices, 1));
+				geometry2.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+
 				const material = new THREE.MeshBasicMaterial({ map: this.texture, transparent: true });
 
+				const blurMaterial = new THREE.MeshPhysicalMaterial({
+					transmission: 0.3,
+					roughness: 0.3,
+					opacity: 0.3,
+				});
+
 				const square = new THREE.Mesh(geometry, material);
+				const blurSquare = new THREE.Mesh(geometry2, blurMaterial);
 
 				square.position.set(
 					i * this.hSquare - this.imageWidth / 2,
 					j * this.vSquare - this.imageHeight / 2,
 				);
 
+				blurSquare.position.set(
+					i * this.hSquare - this.imageWidth / 2,
+					j * this.vSquare - this.imageHeight / 2,
+					10,
+				);
+
 				this.squares.push(square);
 				this.scene.add(square);
+				// this.scene.add(blurSquare);
 			}
 		}
 

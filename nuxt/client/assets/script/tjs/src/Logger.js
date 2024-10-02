@@ -45,7 +45,9 @@ export default class Logger {
 
 	updateItemsProperties() {
 		Object.entries(this.config).forEach(([index, value])=>{
-			this.items[index].material.opacity = value.opacity;
+			if (this.items[index]) {
+				this.items[index].material.opacity = value.opacity;
+			}
 		});
 	}
 

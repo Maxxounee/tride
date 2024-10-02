@@ -22,7 +22,7 @@ onMounted(async()=>{
 	});
 
 	gridImage.animate();
-
+	gridImage.createControls();
 	gridImage.initDevMode();
 });
 </script>
