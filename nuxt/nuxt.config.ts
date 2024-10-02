@@ -49,7 +49,12 @@ export default defineNuxtConfig({
 		customCollections: [],
 	},
 
-	plugins: [],
+	plugins: [
+		{
+			src: '@/plugins/pixi',
+			ssr: false
+		}
+	],
 
 	image: {
 		quality: 80,

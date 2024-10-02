@@ -57,20 +57,12 @@ export default class Squares {
 		for (let i = 0; i < this.hCount; i++) {
 			for (let j = 0; j < this.vCount; j++) {
 				const geometry = new THREE.BufferGeometry();
-				const geometry2 = new THREE.BufferGeometry();
 
 				const positions = new Float32Array([
 					-this.hSquare / 2, -this.vSquare / 2, 0,
 					this.hSquare / 2, -this.vSquare / 2, 0,
 					this.hSquare / 2, this.vSquare / 2, 0,
 					-this.hSquare / 2, this.vSquare / 2, 0,
-				]);
-
-				const positions2 = new Float32Array([
-					-this.hSquare / 2, -this.vSquare / 2, 1,
-					this.hSquare / 2, -this.vSquare / 2, 1,
-					this.hSquare / 2, this.vSquare / 2, 1,
-					-this.hSquare / 2, this.vSquare / 2, 1,
 				]);
 
 				const indices = new Uint16Array([
@@ -89,39 +81,94 @@ export default class Squares {
 				geometry.setIndex(new THREE.BufferAttribute(indices, 1));
 				geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
 
-				geometry2.setAttribute('position', new THREE.BufferAttribute(positions2, 3));
-				geometry2.setIndex(new THREE.BufferAttribute(indices, 1));
-				geometry2.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
-
 				const material = new THREE.MeshBasicMaterial({ map: this.texture, transparent: true });
 
-				const blurMaterial = new THREE.MeshPhysicalMaterial({
-					transmission: 0.3,
-					roughness: 0.3,
-					opacity: 0.3,
-				});
-
 				const square = new THREE.Mesh(geometry, material);
-				const blurSquare = new THREE.Mesh(geometry2, blurMaterial);
 
 				square.position.set(
 					i * this.hSquare - this.imageWidth / 2,
 					j * this.vSquare - this.imageHeight / 2,
 				);
 
-				blurSquare.position.set(
-					i * this.hSquare - this.imageWidth / 2,
-					j * this.vSquare - this.imageHeight / 2,
-					10,
-				);
+				let blurMaterial;
+				let blurSquare;
+				const addBlur = ()=>{
+
+					const vertexShader = `
+						varying vec2 vUv;
+
+						void main() {
+							vUv = uv;
+							gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+						}
+					`;
+
+					const fragmentShader = `
+					uniform sampler2D map;
+					uniform float blurSize;
+					varying vec2 vUv;
+
+					void main() {
+						vec4 sum = vec4(0.0);
+						float blur = blurSize / 1000.0;
+
+						// Horizontal blur
+						sum += texture2D(map, vec2(vUv.x - 4.0 * blur, vUv.y)) * 0.05;
+						sum += texture2D(map, vec2(vUv.x - 3.0 * blur, vUv.y)) * 0.09;
+						sum += texture2D(map, vec2(vUv.x - 2.0 * blur, vUv.y)) * 0.12;
+						sum += texture2D(map, vec2(vUv.x - blur, vUv.y)) * 0.15;
+						sum += texture2D(map, vec2(vUv.x, vUv.y)) * 0.16;
+						sum += texture2D(map, vec2(vUv.x + blur, vUv.y)) * 0.15;
+						sum += texture2D(map, vec2(vUv.x + 2.0 * blur, vUv.y)) * 0.12;
+						sum += texture2D(map, vec2(vUv.x + 3.0 * blur, vUv.y)) * 0.09;
+						sum += texture2D(map, vec2(vUv.x + 4.0 * blur, vUv.y)) * 0.05;
+
+						// Vertical blur
+						sum += texture2D(map, vec2(vUv.x, vUv.y - 4.0 * blur)) * 0.05;
+						sum += texture2D(map, vec2(vUv.x, vUv.y - 3.0 * blur)) * 0.09;
+						sum += texture2D(map, vec2(vUv.x, vUv.y - 2.0 * blur)) * 0.12;
+						sum += texture2D(map, vec2(vUv.x, vUv.y - blur)) * 0.15;
+						sum += texture2D(map, vec2(vUv.x, vUv.y)) * 0.16;
+						sum += texture2D(map, vec2(vUv.x, vUv.y + blur)) * 0.15;
+						sum += texture2D(map, vec2(vUv.x, vUv.y + 2.0 * blur)) * 0.12;
+						sum += texture2D(map, vec2(vUv.x, vUv.y + 3.0 * blur)) * 0.09;
+						sum += texture2D(map, vec2(vUv.x, vUv.y + 4.0 * blur)) * 0.05;
+
+						gl_FragColor = sum / 2.0;
+					}
+				`;
+
+					const blurMaterial = new THREE.ShaderMaterial({
+						uniforms: {
+							// map: { value: this.texture },
+							blurSize: { value: 10.0 },
+						},
+						vertexShader: vertexShader,
+						fragmentShader: fragmentShader,
+						transparent: true,
+					});
+
+					blurSquare = new THREE.Mesh(geometry, blurMaterial);
+					blurSquare.position.set(
+						i * this.hSquare - this.imageWidth / 2,
+						j * this.vSquare - this.imageHeight / 2,
+						10, 10,
+					);
+				};
+				addBlur();
+				this.scene.add(blurSquare);
 
 				this.squares.push(square);
+
 				this.scene.add(square);
-				// this.scene.add(blurSquare);
 			}
 		}
 
 		return this.squares;
+	}
+
+	addBlur(geometry) {
+
 	}
 
 	setProperties() {

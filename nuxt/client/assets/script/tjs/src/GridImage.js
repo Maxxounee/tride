@@ -103,9 +103,6 @@ export default class GridImage {
 
 	animate() {
 		requestAnimationFrame(this.animate.bind(this));
-		setTimeout(()=>{
-			this.renderer.render(this.scene, this.camera);
-		}, 500);
 		this.renderer.render(this.scene, this.camera);
 		this.controls?.update();
 	}
