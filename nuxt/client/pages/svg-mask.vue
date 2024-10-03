@@ -1,8 +1,9 @@
 <template>
 	<div class="svg-mask">
 		<div class="container">
+			<!--<SvgMaskedImagePng />-->
 			<SvgMaskedImage
-				image="/images/brullov.jpg"
+				image="/images/b1.jpg"
 			/>
 		</div>
 	</div>

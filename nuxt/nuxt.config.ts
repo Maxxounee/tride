@@ -35,7 +35,7 @@ export default defineNuxtConfig({
 		'@vueuse/nuxt',
 		'@nuxtjs/device',
 		'@nuxtjs/leaflet',
-
+		'@art3d_v3/resizable-block',
 		'@hypernym/nuxt-gsap',
 		'@tresjs/nuxt',
 	],

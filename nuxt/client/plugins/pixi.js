@@ -1,6 +1,7 @@
-import * as PIXI from 'pixi.js';
+// import * as PIXI from 'pixi.js';
+//
+// if (!window.PIXI) {
+// 	window.PIXI = PIXI;
+// }
+// export default PIXI;
 
-if (!window.PIXI) {
-	window.PIXI = PIXI;
-}
-export default PIXI;
